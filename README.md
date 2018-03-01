@@ -23,7 +23,7 @@ To get up and running quickly, do the following:
 - Install this plugin
 
 ```bash
-$ ember install ember-cli-docker-hub
+$ ember install ember-cli-deploy-docker-hub
 ```
 
 - Place the following configuration into `config/deploy.js`
