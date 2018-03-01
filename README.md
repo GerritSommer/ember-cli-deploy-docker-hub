@@ -1,50 +1,81 @@
-ember-cli-deploy-docker-hub
-==============================================================================
+# ember-cli-deploy-docker-hub
 
-[Short description of the addon.]
+> An ember-cli-deploy plugin to build a docker image and upload it to a repository (Docker hub)
 
-Installation
-------------------------------------------------------------------------------
+## What is an ember-cli-deploy plugin?
 
+A plugin is an addon that can be executed as a part of the ember-cli-deploy pipeline. A plugin will implement one or more of the ember-cli-deploy's pipeline hooks. This plugin will be executed on the 'upload' hook.
+
+For more information on what plugins are and how they work, please refer to the [Plugin Documentation][1].
+
+## Quick Start
+To get up and running quickly, do the following:
+
+- Ensure you are logged in with your docker cli: [docs](https://docs.docker.com/engine/reference/commandline/login/)
+- Ensure [ember-cli-deploy-build][2] is installed and configured.
+- Ensure [ember-cli-deploy-revision-data][3] is installed and configured.
+- Install this plugin
+
+```bash
+$ ember install ember-cli-docker-hub
 ```
-ember install ember-cli-deploy-docker-hub
+
+- Place the following configuration into `config/deploy.js`
+
+```javascript
+ENV["docker-hub"] = {
+    repository:     'company/repository', // required
+    dockerFilePath: 'docker/Dockerfile' // default 'Dockerfile'
+}
 ```
 
+- Run the pipeline
 
-Usage
-------------------------------------------------------------------------------
+```bash
+$ ember deploy
+```
 
-[Longer description of how to use the addon in apps.]
+## Configuration Options
 
 
-Contributing
-------------------------------------------------------------------------------
+For detailed information on how configuration of plugins works, please refer to the [Plugin Documentation][1].
 
-### Installation
+### repository
 
-* `git clone <repository-url>`
-* `cd ember-cli-deploy-docker-hub`
-* `npm install`
+The name of your repository at Docker hub.
 
-### Linting
+*Default:* `undefined`
 
-* `npm run lint:js`
-* `npm run lint:js -- --fix`
+### dockerFilePath
 
-### Running tests
+The path to your Dockerfile relative to your project root.
 
-* `ember test` – Runs the test suite on the current Ember version
-* `ember test --server` – Runs the test suite in "watch mode"
-* `npm test` – Runs `ember try:each` to test your addon against multiple Ember versions
+*Default:* `Dockerfile`
 
-### Running the dummy application
+### What does the plugin do?
 
-* `ember serve`
-* Visit the dummy application at [http://localhost:4200](http://localhost:4200).
+*ember-cli-deploy-docker-hub* builds your image once with the `revisionKey` from `ember-cli-deploy-revision-data` as a tag and once with the `latest` tag.
+Equivalent to:
 
-For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
+```bash
+$ docker build -f 'dockerFilePath' -t repository:123456 .;
+$ docker build -f 'dockerFilePath' -t repository:latest .;
+```
+Then it simply pushes the images to docker hub.
 
-License
-------------------------------------------------------------------------------
+```bash
+$ docker push repository:123456;
+$ docker push repository:latest;
+```
 
-This project is licensed under the [MIT License](LICENSE.md).
+### When does the plugin execute?
+
+Activation occurs during the `upload` hook of the pipeline.
+
+## Running Tests
+
+- `npm test`
+
+[1]: http://ember-cli.github.io/ember-cli-deploy/plugins "Plugin Documentation"
+[2]: https://github.com/ember-cli-deploy/ember-cli-deploy-build "ember-cli-deploy-build"
+[3]: https://github.com/ember-cli-deploy/ember-cli-deploy-revision-data "ember-cli-deploy-revision-data"
