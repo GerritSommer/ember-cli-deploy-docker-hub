@@ -4,6 +4,7 @@
   "description": "ember-cli-deploy plugin to build and upload docker images to Docker Hub.",
   "keywords": [
     "ember-addon",
+    "ember-cli-deploy-plugin",
     "ember-cli-deploy-docker-hub"
   ],
   "license": "MIT",
