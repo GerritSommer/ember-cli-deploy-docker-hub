@@ -6,6 +6,12 @@
 
 A plugin is an addon that can be executed as a part of the ember-cli-deploy pipeline. A plugin will implement one or more of the ember-cli-deploy's pipeline hooks. This plugin will be executed on the 'upload' hook.
 
+This component is part of the rewrite of the frontend-app for my job at easyPEP/staffomatic.
+
+* easyPEP (german name): [homepage](https://easypep.de/de/)
+* Staffomatic (english name): [homepage](https://staffomatic.com/en/)
+* [easyPEP github](https://github.com/easyPEP)
+
 For more information on what plugins are and how they work, please refer to the [Plugin Documentation][1].
 
 ## Quick Start
@@ -72,9 +78,11 @@ $ docker push repository:latest;
 
 Activation occurs during the `upload` hook of the pipeline.
 
-## Running Tests
+## TODO
 
-- `npm test`
+- I don't know how to test this yet. So yes, sadly there are no tests yet.
+- Try this out with other repository hosters.
+- Configure which deploy hook triggers the plugin
 
 [1]: http://ember-cli.github.io/ember-cli-deploy/plugins "Plugin Documentation"
 [2]: https://github.com/ember-cli-deploy/ember-cli-deploy-build "ember-cli-deploy-build"

@@ -11,8 +11,8 @@ module.exports = {
     const DeployPlugin = BasePlugin.extend({
       name: options.name,
 
-      defaultConfig:  { dockerFilePath: 'Dockerfile' },   // eslint-disable-line
-      requiredConfig: [ 'repository' ], // eslint-disable-line
+      defaultConfig:  { dockerFilePath: 'Dockerfile' }, // eslint-disable-line
+      requiredConfig: [ 'repository' ],                 // eslint-disable-line
 
       spawnProcess() {
         let result = child_process.spawnSync(...arguments); // eslint-disable-line
@@ -25,14 +25,20 @@ module.exports = {
       upload(context) {
         const repositoryName = this.readConfig('repository');
         const revisionKey    = context.revisionData.revisionKey
+        const revisionedName = `${repositoryName}:${revisionKey}`;
+        const latestName     = `${repositoryName}:latest`;
 
-        this.log('Generating docker build');
-        this.spawnProcess('docker', ['build','-f', this.readConfig('dockerFilePath'), '-t', `${repositoryName}:${revisionKey}`, '.'])
-        this.spawnProcess('docker', ['build','-f', this.readConfig('dockerFilePath'), '-t', `${repositoryName}:latest`, '.']);
+        this.log(`Generating docker build ${revisionedName}`);
+        this.spawnProcess('docker', ['build','-f', this.readConfig('dockerFilePath'), '-t', revisionedName, '.'])
 
-        this.log('Pushing image to repository');
-        this.spawnProcess('docker', ['push', `${repositoryName}:${revisionKey}`]);
-        this.spawnProcess('docker', ['push', `${repositoryName}:latest`]);
+        this.log(`Generating docker build ${latestName}`);
+        this.spawnProcess('docker', ['build','-f', this.readConfig('dockerFilePath'), '-t', latestName, '.']);
+
+        this.log(`Pushing image to repository: ${revisionedName}`);
+        this.spawnProcess('docker', ['push', revisionedName]);
+
+        this.log(`Pushing image to repository: ${latestName}`);
+        this.spawnProcess('docker', ['push', latestName]);
 
         this.log('All done!');
       }
